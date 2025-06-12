@@ -2,16 +2,16 @@ import { emailRegex } from "@netsu/js-utils";
 import { Button, Input, message, Space, Typography, Card } from "antd";
 import { Meteor } from "meteor/meteor";
 import React, { useState } from "react";
-import { useLocation } from "wouter";
-import { publicRoutes } from "/imports/utils/constants/routes";
+import { useNavigate } from "react-router-dom";
 import { errorResponse } from "/imports/utils/errors";
+import LocaLootLogo from "/imports/ui/components/LocaLootLogo";
 
-const LoginPage: React.FC = () => {
+const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     // display loader while logging in
     const [loggingIn, setLoggingIn] = useState(false);
-    const [location, navigate] = useLocation();
+    const navigate = useNavigate();
 
     const handleSubmit = async () => {
         const cleanedEmail = email.trim();
@@ -26,18 +26,19 @@ const LoginPage: React.FC = () => {
 
         setLoggingIn(true);
 
-        Meteor.loginWithPassword(cleanedEmail, password, (error: Meteor.Error) => {
+        Meteor.loginWithPassword(cleanedEmail, password, (error) => {
             setLoggingIn(false);
 
             if (error) {
                 return errorResponse(error, "Could not log in");
             }
 
-            navigate(publicRoutes.home.path);
+            message.success("Successfully logged in!");
+            navigate("/");
         });
     };
 
-    const handleKeyPress = (e: React.KeyboardEvent) => {
+    const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             handleSubmit();
         }
@@ -47,6 +48,8 @@ const LoginPage: React.FC = () => {
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '20px' }}>
             <Card style={{ width: '100%', maxWidth: 400 }}>
                 <Space direction="vertical" style={{ width: '100%' }}>
+                    <LocaLootLogo width={250} height={100} style={{ marginBottom: '20px' }} />
+                    
                     <Typography.Title level={2} style={{ textAlign: 'center', marginBottom: '30px' }}>
                         Sign in to your account
                     </Typography.Title>
@@ -81,7 +84,7 @@ const LoginPage: React.FC = () => {
 
                     <Typography style={{ textAlign: 'center' }}>
                         Don't have an account?{" "}
-                        <Button type="link" onClick={() => navigate(publicRoutes.signup.path)}>
+                        <Button type="link" onClick={() => navigate("/signup")}>
                             Create one
                         </Button>
                     </Typography>

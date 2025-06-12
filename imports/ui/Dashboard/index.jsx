@@ -3,11 +3,7 @@ import { UserOutlined, ClockCircleOutlined, CheckCircleOutlined } from "@ant-des
 import { Meteor } from "meteor/meteor";
 import React from "react";
 
-interface DashboardProps {
-    userId?: string | null;
-}
-
-const Dashboard: React.FC<DashboardProps> = ({ userId }) => {
+const Dashboard = ({ userId }) => {
     const user = Meteor.user();
 
     return (

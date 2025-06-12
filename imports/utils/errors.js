@@ -1,7 +1,7 @@
 import { message } from "antd";
 import { Meteor } from "meteor/meteor";
 
-export const errorResponse = (error: Meteor.Error, defaultMessage?: string) => {
+export const errorResponse = (error, defaultMessage) => {
     console.error(error);
     
     if (error.reason) {

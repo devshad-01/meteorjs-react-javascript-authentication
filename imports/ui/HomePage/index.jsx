@@ -2,14 +2,10 @@ import { Typography, Button, Space, Card, Row, Col } from "antd";
 import { UserOutlined, RocketOutlined, SecurityScanOutlined } from "@ant-design/icons";
 import { Meteor } from "meteor/meteor";
 import React from "react";
-import { useLocation } from "wouter";
+import { useNavigate } from "react-router-dom";
 
-interface HomePageProps {
-    userId?: string | null;
-}
-
-const HomePage: React.FC<HomePageProps> = ({ userId }) => {
-    const [location, navigate] = useLocation();
+const HomePage = ({ userId }) => {
+    const navigate = useNavigate();
 
     const handleLogout = () => {
         Meteor.logout(() => {

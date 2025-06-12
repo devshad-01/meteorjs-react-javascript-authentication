@@ -1,20 +1,20 @@
-import { checkStrEmpty, emailRegex } from "@netsu/js-utils";
+import { emailRegex } from "@netsu/js-utils";
 import { Button, Input, message, Space, Typography, Card } from "antd";
 import { Accounts } from "meteor/accounts-base";
 import { Meteor } from "meteor/meteor";
 import React, { useState } from "react";
-import { useLocation } from "wouter";
-import { publicRoutes } from "/imports/utils/constants/routes";
+import { useNavigate } from "react-router-dom";
 import { errorResponse } from "/imports/utils/errors";
+import LocaLootLogo from "/imports/ui/components/LocaLootLogo";
 
-const SignupPage: React.FC = () => {
+const SignupPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [username, setUsername] = useState("");
     // display loader while creating account
     const [loggingIn, setLoggingIn] = useState(false);
-    const [location, navigate] = useLocation();
+    const navigate = useNavigate();
 
     const handleSubmit = async () => {
         const cleanedEmail = email.trim();
@@ -45,8 +45,8 @@ const SignupPage: React.FC = () => {
                 username: cleanedUsername,
             };
 
-            await new Promise<void>((resolve, reject) => {
-                Accounts.createUser(options, (error: Meteor.Error) => {
+            await new Promise((resolve, reject) => {
+                Accounts.createUser(options, (error) => {
                     if (error) {
                         reject(error);
                     } else {
@@ -56,14 +56,15 @@ const SignupPage: React.FC = () => {
             });
 
             // User is automatically logged in after successful account creation
-            navigate(publicRoutes.home.path);
+            message.success("Account created successfully! Welcome!");
+            navigate("/");
         } catch (error) {
             setLoggingIn(false);
-            return errorResponse(error as Meteor.Error, "Could not create account");
+            return errorResponse(error, "Could not create account");
         }
     };
 
-    const handleKeyPress = (e: React.KeyboardEvent) => {
+    const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             handleSubmit();
         }
@@ -73,6 +74,8 @@ const SignupPage: React.FC = () => {
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '20px' }}>
             <Card style={{ width: '100%', maxWidth: 400 }}>
                 <Space direction="vertical" style={{ width: '100%' }}>
+                    <LocaLootLogo width={250} height={100} style={{ marginBottom: '20px' }} />
+                    
                     <Typography.Title level={2} style={{ textAlign: 'center', marginBottom: '30px' }}>
                         Create your account
                     </Typography.Title>
@@ -124,7 +127,7 @@ const SignupPage: React.FC = () => {
 
                     <Typography style={{ textAlign: 'center' }}>
                         Already have an account?{" "}
-                        <Button type="link" onClick={() => navigate(publicRoutes.login.path)}>
+                        <Button type="link" onClick={() => navigate("/login")}>
                             Login
                         </Button>
                     </Typography>
